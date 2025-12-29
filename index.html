@@ -37,57 +37,6 @@
             margin-bottom: 20px;
         }
 
-        .setup-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .setup-section.hidden {
-            display: none;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: 600;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background: #5568d3;
-        }
-
         .scanner-section {
             background: white;
             padding: 30px;
@@ -102,6 +51,8 @@
             padding: 20px;
             border: 3px dashed #667eea;
             background: #f8f9fa;
+            width: 100%;
+            border-radius: 8px;
         }
 
         .result-card {
@@ -166,12 +117,8 @@
             margin-top: 20px;
         }
 
-        .success {
-            background: #efe;
-            color: #3c3;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
+        .error.hidden {
+            display: none;
         }
 
         .status {
@@ -190,6 +137,31 @@
             background: #fff3cd;
             color: #856404;
         }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -197,30 +169,26 @@
         <div class="header">
             <h1>🧱 LEGO Collection Scanner</h1>
             
-            <div class="setup-section" id="setupSection">
-                <h3 style="margin-bottom: 15px;">Setup Configuration</h3>
-                <div class="input-group">
-                    <label for="apiKey">Google Sheets API Key:</label>
-                    <input type="text" id="apiKey" placeholder="Enter your API key">
-                </div>
-                <div class="input-group">
-                    <label for="sheetId">Google Sheet ID:</label>
-                    <input type="text" id="sheetId" placeholder="Enter your sheet ID">
-                </div>
-                <div class="input-group">
-                    <label for="sheetName">Sheet Name (tab name):</label>
-                    <input type="text" id="sheetName" value="Sheet1" placeholder="Sheet1">
-                </div>
-                <button onclick="saveConfig()">Save & Start Scanning</button>
-                <div id="setupMessage"></div>
-            </div>
-
-            <div class="scanner-section hidden" id="scannerSection">
+            <div class="scanner-section">
                 <h3>Ready to Scan</h3>
                 <p style="margin: 10px 0; color: #666;">Scan an RFID tag or type manually</p>
                 <input type="text" id="rfidInput" class="scanner-input" placeholder="Waiting for RFID scan..." autofocus>
-                <div id="statusMessage" class="status waiting">Waiting for scan...</div>
-                <button onclick="showSetup()" style="margin-top: 15px; background: #6c757d;">⚙️ Settings</button>
+                <div id="statusMessage" class="status ready">Ready - <span id="setCount">0</span> sets loaded</div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalSets">0</div>
+                        <div class="stat-label">Total Sets</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalPieces">0</div>
+                        <div class="stat-label">Total Pieces</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="scansToday">0</div>
+                        <div class="stat-label">Scans Today</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -234,94 +202,86 @@
     </div>
 
     <script>
-        let API_KEY = '';
-        let SHEET_ID = '';
-        let SHEET_NAME = 'Sheet1';
-
-        // Load saved configuration
-        window.onload = function() {
-            const saved = localStorage.getItem('legoScannerConfig');
-            if (saved) {
-                const config = JSON.parse(saved);
-                API_KEY = config.apiKey;
-                SHEET_ID = config.sheetId;
-                SHEET_NAME = config.sheetName || 'Sheet1';
-                
-                document.getElementById('apiKey').value = API_KEY;
-                document.getElementById('sheetId').value = SHEET_ID;
-                document.getElementById('sheetName').value = SHEET_NAME;
-                
-                if (API_KEY && SHEET_ID) {
-                    showScanner();
-                }
+        // YOUR LEGO COLLECTION DATA
+        // Edit this section to add your sets!
+        // The RFID tag should contain the set number (e.g., "75192")
+        const legoSets = [
+            {
+                set_number: "75192",
+                set_name: "Millennium Falcon",
+                theme: "Star Wars",
+                year: "2017",
+                piece_count: "7541",
+                image_url: "https://images.brickset.com/sets/large/75192-1.jpg"
+            },
+            {
+                set_number: "10497",
+                set_name: "Galaxy Explorer",
+                theme: "Icons",
+                year: "2022",
+                piece_count: "1254",
+                image_url: "https://images.brickset.com/sets/large/10497-1.jpg"
+            },
+            {
+                set_number: "21348",
+                set_name: "Dungeons & Dragons: Red Dragon's Tale",
+                theme: "Ideas",
+                year: "2024",
+                piece_count: "3745",
+                image_url: "https://images.brickset.com/sets/large/21348-1.jpg"
             }
+            // Add more sets here in the same format
+        ];
+
+        // Calculate statistics
+        function updateStats() {
+            const totalSets = legoSets.length;
+            const totalPieces = legoSets.reduce((sum, set) => {
+                const pieces = parseInt(set.piece_count) || 0;
+                return sum + pieces;
+            }, 0);
+
+            document.getElementById('setCount').textContent = totalSets;
+            document.getElementById('totalSets').textContent = totalSets;
+            document.getElementById('totalPieces').textContent = totalPieces.toLocaleString();
+
+            // Get today's scan count
+            const today = new Date().toDateString();
+            const scansToday = localStorage.getItem('scansToday_' + today) || 0;
+            document.getElementById('scansToday').textContent = scansToday;
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            updateStats();
+            document.getElementById('rfidInput').focus();
         };
 
-        function saveConfig() {
-            API_KEY = document.getElementById('apiKey').value.trim();
-            SHEET_ID = document.getElementById('sheetId').value.trim();
-            SHEET_NAME = document.getElementById('sheetName').value.trim() || 'Sheet1';
-
-            if (!API_KEY || !SHEET_ID) {
-                showMessage('setupMessage', 'Please fill in all required fields', 'error');
-                return;
-            }
-
-            localStorage.setItem('legoScannerConfig', JSON.stringify({
-                apiKey: API_KEY,
-                sheetId: SHEET_ID,
-                sheetName: SHEET_NAME
-            }));
-
-            showMessage('setupMessage', 'Configuration saved!', 'success');
-            setTimeout(showScanner, 1000);
-        }
-
-        function showScanner() {
-            document.getElementById('setupSection').classList.add('hidden');
-            document.getElementById('scannerSection').classList.remove('hidden');
-            document.getElementById('rfidInput').focus();
-        }
-
-        function showSetup() {
-            document.getElementById('setupSection').classList.remove('hidden');
-            document.getElementById('scannerSection').classList.add('hidden');
-        }
-
-        function showMessage(elementId, message, type) {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.className = type;
-            element.style.display = 'block';
-        }
-
         // Handle RFID input
-        document.addEventListener('DOMContentLoaded', function() {
-            const input = document.getElementById('rfidInput');
-            
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    const rfidTag = this.value.trim();
-                    if (rfidTag) {
-                        lookupSet(rfidTag);
-                    }
+        const input = document.getElementById('rfidInput');
+        
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const rfidTag = this.value.trim();
+                if (rfidTag) {
+                    lookupSet(rfidTag);
                 }
-            });
-
-            // Auto-clear after a delay (useful for RFID readers that auto-submit)
-            let timeout;
-            input.addEventListener('input', function() {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    const rfidTag = this.value.trim();
-                    if (rfidTag) {
-                        lookupSet(rfidTag);
-                    }
-                }, 500);
-            });
+            }
         });
 
-        async function lookupSet(rfidTag) {
+        // Auto-lookup after input (for RFID readers that don't press Enter)
+        let timeout;
+        input.addEventListener('input', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                const rfidTag = this.value.trim();
+                if (rfidTag && rfidTag.length > 2) {
+                    lookupSet(rfidTag);
+                }
+            }, 500);
+        });
+
+        function lookupSet(scannedValue) {
             const statusMsg = document.getElementById('statusMessage');
             statusMsg.textContent = 'Looking up set...';
             statusMsg.className = 'status waiting';
@@ -329,49 +289,25 @@
             document.getElementById('resultCard').classList.add('hidden');
             document.getElementById('errorMessage').classList.add('hidden');
 
-            try {
-                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
-                const response = await fetch(url);
+            // Find matching set by set_number (case-insensitive)
+            const matchingSet = legoSets.find(set => 
+                set.set_number.toLowerCase() === scannedValue.toLowerCase()
+            );
+
+            if (matchingSet) {
+                displaySet(matchingSet);
+                statusMsg.textContent = '✓ Set found!';
+                statusMsg.className = 'status ready';
                 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data. Check your API key and Sheet ID.');
-                }
-
-                const data = await response.json();
-                const rows = data.values;
-
-                if (!rows || rows.length < 2) {
-                    throw new Error('No data found in sheet');
-                }
-
-                // Find the row matching the RFID tag (case-insensitive)
-                const headerRow = rows[0];
-                const dataRows = rows.slice(1);
-                
-                const matchingRow = dataRows.find(row => 
-                    row[0] && row[0].toString().toLowerCase() === rfidTag.toLowerCase()
-                );
-
-                if (matchingRow) {
-                    displaySet({
-                        rfid_tag: matchingRow[0] || '',
-                        set_number: matchingRow[1] || '',
-                        set_name: matchingRow[2] || '',
-                        theme: matchingRow[3] || '',
-                        year: matchingRow[4] || '',
-                        piece_count: matchingRow[5] || '',
-                        image_url: matchingRow[6] || ''
-                    });
-                    statusMsg.textContent = '✓ Set found!';
-                    statusMsg.className = 'status ready';
-                } else {
-                    throw new Error(`No set found for RFID tag: ${rfidTag}`);
-                }
-
-            } catch (error) {
-                document.getElementById('errorMessage').textContent = error.message;
+                // Increment scan count
+                const today = new Date().toDateString();
+                const currentCount = parseInt(localStorage.getItem('scansToday_' + today) || 0);
+                localStorage.setItem('scansToday_' + today, currentCount + 1);
+                updateStats();
+            } else {
+                document.getElementById('errorMessage').textContent = `No set found with set number: ${scannedValue}`;
                 document.getElementById('errorMessage').classList.remove('hidden');
-                statusMsg.textContent = '✗ Error occurred';
+                statusMsg.textContent = '✗ Set not found';
                 statusMsg.className = 'status waiting';
             }
 
@@ -389,6 +325,9 @@
             if (set.image_url) {
                 img.src = set.image_url;
                 img.style.display = 'block';
+                img.onerror = function() {
+                    this.style.display = 'none';
+                };
             } else {
                 img.style.display = 'none';
             }
@@ -397,11 +336,10 @@
             details.innerHTML = '';
 
             const fields = [
-                { label: 'RFID Tag', value: set.rfid_tag },
                 { label: 'Set Number', value: set.set_number },
                 { label: 'Theme', value: set.theme },
                 { label: 'Year', value: set.year },
-                { label: 'Piece Count', value: set.piece_count }
+                { label: 'Piece Count', value: set.piece_count ? parseInt(set.piece_count).toLocaleString() : '' }
             ];
 
             fields.forEach(field => {
