@@ -12,62 +12,133 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0066cc 0%, #00264d 100%);
             min-height: 100vh;
             padding: 20px;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
         .header {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             margin-bottom: 30px;
-            text-align: center;
         }
 
         h1 {
-            color: #333;
+            color: #0066cc;
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        .search-section {
+            display: flex;
+            gap: 15px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-        .scanner-section {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            text-align: center;
+        .search-input-wrapper {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
         }
 
-        .scanner-input {
-            font-size: 24px;
-            text-align: center;
-            padding: 20px;
-            border: 3px dashed #667eea;
-            background: #f8f9fa;
+        .search-input {
             width: 100%;
-            border-radius: 8px;
+            padding: 18px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+        }
+
+        .search-type {
+            padding: 18px 25px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+
+        .search-type:hover {
+            border-color: #0066cc;
+        }
+
+        .search-type:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 102, 204, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .result-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             margin-top: 20px;
-            animation: slideIn 0.3s ease-out;
+            animation: slideUp 0.4s ease-out;
         }
 
-        @keyframes slideIn {
+        @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(-20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -79,42 +150,102 @@
             display: none;
         }
 
+        .set-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .set-title {
+            flex: 1;
+        }
+
+        .set-title h2 {
+            color: #0066cc;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .set-number-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .instructions-btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+        }
+
+        .instructions-btn:hover {
+            background: #0052a3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+        }
+
         .set-image {
             max-width: 100%;
             height: auto;
-            border-radius: 10px;
-            margin: 20px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         }
 
         .set-details {
-            text-align: left;
-            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
         }
 
-        .detail-row {
-            display: flex;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
+        .detail-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #0066cc;
         }
 
         .detail-label {
             font-weight: 600;
-            color: #667eea;
-            width: 150px;
+            color: #0066cc;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
         .detail-value {
             color: #333;
-            flex: 1;
+            font-size: 1.3em;
+            font-weight: 600;
         }
 
         .error {
-            background: #fee;
-            color: #c33;
-            padding: 15px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 12px;
             margin-top: 20px;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
         }
 
         .error.hidden {
@@ -122,78 +253,100 @@
         }
 
         .status {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            font-weight: 600;
-        }
-
-        .status.ready {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status.waiting {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-around;
             margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .stat-item {
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-weight: 600;
             text-align: center;
         }
 
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
+        .status.ready {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(81, 207, 102, 0.3);
         }
 
-        .stat-label {
-            font-size: 12px;
+        .status.waiting {
+            background: #f8f9fa;
             color: #666;
-            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .header {
+                padding: 25px;
+            }
+            
+            .result-card {
+                padding: 25px;
+            }
+            
+            .search-section {
+                flex-direction: column;
+            }
+            
+            .search-input-wrapper {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🧱 LEGO Collection Scanner</h1>
+            <h1>🧱 LEGO Collection</h1>
+            <div class="subtitle">Scan or search your collection</div>
             
-            <div class="scanner-section">
-                <h3>Ready to Scan</h3>
-                <p style="margin: 10px 0; color: #666;">Scan an RFID tag or type manually</p>
-                <input type="text" id="rfidInput" class="scanner-input" placeholder="Waiting for RFID scan..." autofocus>
-                <div id="statusMessage" class="status ready">Ready - <span id="setCount">0</span> sets loaded</div>
-                
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-number" id="totalSets">0</div>
-                        <div class="stat-label">Total Sets</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="totalPieces">0</div>
-                        <div class="stat-label">Total Pieces</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="scansToday">0</div>
-                        <div class="stat-label">Scans Today</div>
-                    </div>
+            <div class="search-section">
+                <div class="search-input-wrapper">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Enter Set Number"
+                        autofocus
+                    >
+                </div>
+                <select id="searchType" class="search-type">
+                    <option value="set_number">Set Number</option>
+                    <option value="theme">Theme</option>
+                    <option value="set_name">Set Name</option>
+                </select>
+            </div>
+
+            <div id="statusMessage" class="status ready">
+                <span id="setCount">0</span> sets in collection
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalSets">0</div>
+                    <div class="stat-label">Total Sets</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalPieces">0</div>
+                    <div class="stat-label">Total Pieces</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalBags">0</div>
+                    <div class="stat-label">Total Bags</div>
                 </div>
             </div>
         </div>
 
         <div id="resultCard" class="result-card hidden">
-            <h2 id="setName"></h2>
+            <div class="set-header">
+                <div class="set-title">
+                    <h2 id="setName"></h2>
+                    <span id="setNumberBadge" class="set-number-badge"></span>
+                </div>
+                <a id="instructionsBtn" class="instructions-btn" target="_blank" style="display: none;">
+                    📖 View Instructions
+                </a>
+            </div>
             <img id="setImage" class="set-image" alt="LEGO Set">
             <div class="set-details" id="setDetails"></div>
         </div>
@@ -204,31 +357,16 @@
     <script>
         // YOUR LEGO COLLECTION DATA
         // Edit this section to add your sets!
-        // The RFID tag should contain the set number (e.g., "75192")
         const legoSets = [
             {
                 set_number: "5770",
-                set_name: "Millennium Falcon",
-                theme: "Star Wars",
-                year: "2017",
-                piece_count: "7541",
-                image_url: "https://images.brickset.com/sets/large/75192-1.jpg"
-            },
-            {
-                set_number: "10497",
-                set_name: "Galaxy Explorer",
-                theme: "Icons",
-                year: "2022",
-                piece_count: "1254",
-                image_url: "https://images.brickset.com/sets/large/10497-1.jpg"
-            },
-            {
-                set_number: "21348",
-                set_name: "Dungeons & Dragons: Red Dragon's Tale",
-                theme: "Ideas",
-                year: "2024",
-                piece_count: "3745",
-                image_url: "https://images.brickset.com/sets/large/21348-1.jpg"
+                set_name: "Lighthouse Island",
+                theme: "Creator",
+                year: "2011",
+                piece_count: "518",
+                bag_count: "1",
+                image_url: "https://www.lego.com/cdn/product-assets/product.img.pri/5770_prod.jpg?format=webply&fit=bounds&quality=60&width=500&height=500&dpr=2",
+                instructions_url: "https://www.lego.com/en-us/service/building-instructions/5770"
             }
             // Add more sets here in the same format
         ];
@@ -240,86 +378,112 @@
                 const pieces = parseInt(set.piece_count) || 0;
                 return sum + pieces;
             }, 0);
+            const totalBags = legoSets.reduce((sum, set) => {
+                const bags = parseInt(set.bag_count) || 0;
+                return sum + bags;
+            }, 0);
 
             document.getElementById('setCount').textContent = totalSets;
             document.getElementById('totalSets').textContent = totalSets;
             document.getElementById('totalPieces').textContent = totalPieces.toLocaleString();
-
-            // Get today's scan count
-            const today = new Date().toDateString();
-            const scansToday = localStorage.getItem('scansToday_' + today) || 0;
-            document.getElementById('scansToday').textContent = scansToday;
+            document.getElementById('totalBags').textContent = totalBags;
         }
 
         // Initialize on page load
         window.onload = function() {
             updateStats();
-            document.getElementById('rfidInput').focus();
+            document.getElementById('searchInput').focus();
         };
 
-        // Handle RFID input
-        const input = document.getElementById('rfidInput');
+        // Handle search input
+        const input = document.getElementById('searchInput');
+        const searchType = document.getElementById('searchType');
         
         input.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                const rfidTag = this.value.trim();
-                if (rfidTag) {
-                    lookupSet(rfidTag);
+                const searchValue = this.value.trim();
+                if (searchValue) {
+                    performSearch(searchValue);
                 }
             }
         });
 
-        // Auto-lookup after input (for RFID readers that don't press Enter)
+        // Auto-search after typing pause
         let timeout;
         input.addEventListener('input', function() {
             clearTimeout(timeout);
             timeout = setTimeout(() => {
-                const rfidTag = this.value.trim();
-                if (rfidTag && rfidTag.length > 2) {
-                    lookupSet(rfidTag);
+                const searchValue = this.value.trim();
+                if (searchValue && searchValue.length > 1) {
+                    performSearch(searchValue);
                 }
             }, 500);
         });
 
-        function lookupSet(scannedValue) {
+        function performSearch(searchValue) {
             const statusMsg = document.getElementById('statusMessage');
-            statusMsg.textContent = 'Looking up set...';
-            statusMsg.className = 'status waiting';
-
+            const type = searchType.value;
+            
             document.getElementById('resultCard').classList.add('hidden');
             document.getElementById('errorMessage').classList.add('hidden');
 
-            // Find matching set by set_number (case-insensitive)
-            const matchingSet = legoSets.find(set => 
-                set.set_number.toLowerCase() === scannedValue.toLowerCase()
-            );
-
-            if (matchingSet) {
-                displaySet(matchingSet);
-                statusMsg.textContent = '✓ Set found!';
-                statusMsg.className = 'status ready';
-                
-                // Increment scan count
-                const today = new Date().toDateString();
-                const currentCount = parseInt(localStorage.getItem('scansToday_' + today) || 0);
-                localStorage.setItem('scansToday_' + today, currentCount + 1);
-                updateStats();
-            } else {
-                document.getElementById('errorMessage').textContent = `No set found with set number: ${scannedValue}`;
-                document.getElementById('errorMessage').classList.remove('hidden');
-                statusMsg.textContent = '✗ Set not found';
-                statusMsg.className = 'status waiting';
+            // Find matching sets based on search type
+            let matchingSets = [];
+            
+            if (type === 'set_number') {
+                matchingSets = legoSets.filter(set => 
+                    set.set_number.toLowerCase().includes(searchValue.toLowerCase())
+                );
+            } else if (type === 'theme') {
+                matchingSets = legoSets.filter(set => 
+                    set.theme && set.theme.toLowerCase().includes(searchValue.toLowerCase())
+                );
+            } else if (type === 'set_name') {
+                matchingSets = legoSets.filter(set => 
+                    set.set_name && set.set_name.toLowerCase().includes(searchValue.toLowerCase())
+                );
             }
 
-            // Clear input for next scan
-            setTimeout(() => {
-                document.getElementById('rfidInput').value = '';
-                document.getElementById('rfidInput').focus();
-            }, 100);
+            if (matchingSets.length > 0) {
+                // If exact match on set number, show that one
+                const exactMatch = matchingSets.find(set => 
+                    set.set_number.toLowerCase() === searchValue.toLowerCase()
+                );
+                
+                if (exactMatch) {
+                    displaySet(exactMatch);
+                    statusMsg.innerHTML = '<span style="font-size: 1.2em;">✓</span> Set found!';
+                    statusMsg.className = 'status ready';
+                } else if (matchingSets.length === 1) {
+                    displaySet(matchingSets[0]);
+                    statusMsg.innerHTML = '<span style="font-size: 1.2em;">✓</span> Set found!';
+                    statusMsg.className = 'status ready';
+                } else {
+                    // Multiple matches - show the first one
+                    displaySet(matchingSets[0]);
+                    statusMsg.innerHTML = `<span style="font-size: 1.2em;">✓</span> Found ${matchingSets.length} matches - showing first result`;
+                    statusMsg.className = 'status ready';
+                }
+            } else {
+                document.getElementById('errorMessage').textContent = `No sets found matching "${searchValue}" in ${type.replace('_', ' ')}`;
+                document.getElementById('errorMessage').classList.remove('hidden');
+                statusMsg.textContent = `${legoSets.length} sets in collection`;
+                statusMsg.className = 'status ready';
+            }
         }
 
         function displaySet(set) {
             document.getElementById('setName').textContent = set.set_name || 'Unknown Set';
+            document.getElementById('setNumberBadge').textContent = `Set ${set.set_number}`;
+            
+            // Handle instructions button
+            const instructionsBtn = document.getElementById('instructionsBtn');
+            if (set.instructions_url) {
+                instructionsBtn.href = set.instructions_url;
+                instructionsBtn.style.display = 'inline-block';
+            } else {
+                instructionsBtn.style.display = 'none';
+            }
             
             const img = document.getElementById('setImage');
             if (set.image_url) {
@@ -336,25 +500,31 @@
             details.innerHTML = '';
 
             const fields = [
-                { label: 'Set Number', value: set.set_number },
                 { label: 'Theme', value: set.theme },
                 { label: 'Year', value: set.year },
-                { label: 'Piece Count', value: set.piece_count ? parseInt(set.piece_count).toLocaleString() : '' }
+                { label: 'Piece Count', value: set.piece_count ? parseInt(set.piece_count).toLocaleString() : '' },
+                { label: 'Number of Bags', value: set.bag_count }
             ];
 
             fields.forEach(field => {
                 if (field.value) {
-                    const row = document.createElement('div');
-                    row.className = 'detail-row';
-                    row.innerHTML = `
-                        <div class="detail-label">${field.label}:</div>
+                    const card = document.createElement('div');
+                    card.className = 'detail-card';
+                    card.innerHTML = `
+                        <div class="detail-label">${field.label}</div>
                         <div class="detail-value">${field.value}</div>
                     `;
-                    details.appendChild(row);
+                    details.appendChild(card);
                 }
             });
 
             document.getElementById('resultCard').classList.remove('hidden');
+            
+            // Clear input after showing result
+            setTimeout(() => {
+                document.getElementById('searchInput').value = '';
+                document.getElementById('searchInput').focus();
+            }, 100);
         }
     </script>
 </body>
