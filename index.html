@@ -125,13 +125,33 @@
             letter-spacing: 0.5px;
         }
 
+        .results-container {
+            margin-top: 20px;
+        }
+
+        .results-container.hidden {
+            display: none;
+        }
+
+        .results-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #0066cc;
+        }
+
         .result-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            margin-top: 20px;
+            margin-bottom: 20px;
             animation: slideUp 0.4s ease-out;
         }
 
@@ -144,10 +164,6 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
-
-        .result-card.hidden {
-            display: none;
         }
 
         .set-header {
@@ -337,18 +353,9 @@
             </div>
         </div>
 
-        <div id="resultCard" class="result-card hidden">
-            <div class="set-header">
-                <div class="set-title">
-                    <h2 id="setName"></h2>
-                    <span id="setNumberBadge" class="set-number-badge"></span>
-                </div>
-                <a id="instructionsBtn" class="instructions-btn" target="_blank" style="display: none;">
-                    📖 View Instructions
-                </a>
-            </div>
-            <img id="setImage" class="set-image" alt="LEGO Set">
-            <div class="set-details" id="setDetails"></div>
+        <div id="resultsContainer" class="results-container hidden">
+            <div id="resultsHeader" class="results-header"></div>
+            <div id="resultsContent"></div>
         </div>
 
         <div id="errorMessage" class="error hidden"></div>
@@ -359,24 +366,34 @@
         // Edit this section to add your sets!
         const legoSets = [
             {
-                set_number: "5770",
-                set_name: "Lighthouse Island",
-                theme: "Creator",
-                year: "2011",
-                piece_count: "518",
-                bag_count: "1",
-                image_url: "https://www.lego.com/cdn/product-assets/product.img.pri/5770_prod.jpg?format=webply&fit=bounds&quality=60&width=500&height=500&dpr=2",
-                instructions_url: "https://www.lego.com/en-us/service/building-instructions/5770"
+                set_number: "75192",
+                set_name: "Millennium Falcon",
+                theme: "Star Wars",
+                year: "2017",
+                piece_count: "7541",
+                bag_count: "4",
+                image_url: "https://images.brickset.com/sets/large/75192-1.jpg",
+                instructions_url: "https://www.lego.com/en-us/service/buildinginstructions/75192"
             },
             {
-                set_number: "5770",
-                set_name: "Lighthouse Island",
-                theme: "Creator",
-                year: "2011",
-                piece_count: "519",
-                bag_count: "1",
-                image_url: "https://www.lego.com/cdn/product-assets/product.img.pri/5770_prod.jpg?format=webply&fit=bounds&quality=60&width=500&height=500&dpr=2",
-                instructions_url: "https://www.lego.com/en-us/service/building-instructions/5770"
+                set_number: "10497",
+                set_name: "Galaxy Explorer",
+                theme: "Icons",
+                year: "2022",
+                piece_count: "1254",
+                bag_count: "2",
+                image_url: "https://images.brickset.com/sets/large/10497-1.jpg",
+                instructions_url: "https://www.lego.com/en-us/service/buildinginstructions/10497"
+            },
+            {
+                set_number: "21348",
+                set_name: "Dungeons & Dragons: Red Dragon's Tale",
+                theme: "Ideas",
+                year: "2024",
+                piece_count: "3745",
+                bag_count: "3",
+                image_url: "https://images.brickset.com/sets/large/21348-1.jpg",
+                instructions_url: "https://www.lego.com/en-us/service/buildinginstructions/21348"
             }
             // Add more sets here in the same format
         ];
@@ -434,7 +451,7 @@
             const statusMsg = document.getElementById('statusMessage');
             const type = searchType.value;
             
-            document.getElementById('resultCard').classList.add('hidden');
+            document.getElementById('resultsContainer').classList.add('hidden');
             document.getElementById('errorMessage').classList.add('hidden');
 
             // Find matching sets based on search type
@@ -455,25 +472,9 @@
             }
 
             if (matchingSets.length > 0) {
-                // If exact match on set number, show that one
-                const exactMatch = matchingSets.find(set => 
-                    set.set_number.toLowerCase() === searchValue.toLowerCase()
-                );
-                
-                if (exactMatch) {
-                    displaySet(exactMatch);
-                    statusMsg.innerHTML = '<span style="font-size: 1.2em;">✓</span> Set found!';
-                    statusMsg.className = 'status ready';
-                } else if (matchingSets.length === 1) {
-                    displaySet(matchingSets[0]);
-                    statusMsg.innerHTML = '<span style="font-size: 1.2em;">✓</span> Set found!';
-                    statusMsg.className = 'status ready';
-                } else {
-                    // Multiple matches - show the first one
-                    displaySet(matchingSets[0]);
-                    statusMsg.innerHTML = `<span style="font-size: 1.2em;">✓</span> Found ${matchingSets.length} matches - showing first result`;
-                    statusMsg.className = 'status ready';
-                }
+                displayResults(matchingSets, searchValue, type);
+                statusMsg.innerHTML = `<span style="font-size: 1.2em;">✓</span> Found ${matchingSets.length} result${matchingSets.length > 1 ? 's' : ''}`;
+                statusMsg.className = 'status ready';
             } else {
                 document.getElementById('errorMessage').textContent = `No sets found matching "${searchValue}" in ${type.replace('_', ' ')}`;
                 document.getElementById('errorMessage').classList.remove('hidden');
@@ -482,59 +483,84 @@
             }
         }
 
-        function displaySet(set) {
-            document.getElementById('setName').textContent = set.set_name || 'Unknown Set';
-            document.getElementById('setNumberBadge').textContent = `Set ${set.set_number}`;
+        function displayResults(sets, searchValue, searchType) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultsHeader = document.getElementById('resultsHeader');
+            const resultsContent = document.getElementById('resultsContent');
             
-            // Handle instructions button
-            const instructionsBtn = document.getElementById('instructionsBtn');
+            // Update header
+            const searchTypeLabel = searchType.replace('_', ' ');
+            resultsHeader.textContent = `Found ${sets.length} set${sets.length > 1 ? 's' : ''} matching "${searchValue}"`;
+            
+            // Clear previous results
+            resultsContent.innerHTML = '';
+            
+            // Display all matching sets
+            sets.forEach(set => {
+                const resultCard = createResultCard(set);
+                resultsContent.appendChild(resultCard);
+            });
+            
+            resultsContainer.classList.remove('hidden');
+            
+            // Clear input after showing results
+            setTimeout(() => {
+                document.getElementById('searchInput').value = '';
+                document.getElementById('searchInput').focus();
+            }, 100);
+        }
+
+        function createResultCard(set) {
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            
+            // Build the card HTML
+            let cardHTML = `
+                <div class="set-header">
+                    <div class="set-title">
+                        <h2>${set.set_name || 'Unknown Set'}</h2>
+                        <span class="set-number-badge">Set ${set.set_number}</span>
+                    </div>
+            `;
+            
             if (set.instructions_url) {
-                instructionsBtn.href = set.instructions_url;
-                instructionsBtn.style.display = 'inline-block';
-            } else {
-                instructionsBtn.style.display = 'none';
+                cardHTML += `
+                    <a href="${set.instructions_url}" class="instructions-btn" target="_blank">
+                        📖 View Instructions
+                    </a>
+                `;
             }
             
-            const img = document.getElementById('setImage');
+            cardHTML += `</div>`;
+            
             if (set.image_url) {
-                img.src = set.image_url;
-                img.style.display = 'block';
-                img.onerror = function() {
-                    this.style.display = 'none';
-                };
-            } else {
-                img.style.display = 'none';
+                cardHTML += `<img src="${set.image_url}" class="set-image" alt="${set.set_name}" onerror="this.style.display='none'">`;
             }
-
-            const details = document.getElementById('setDetails');
-            details.innerHTML = '';
-
+            
+            cardHTML += `<div class="set-details">`;
+            
             const fields = [
                 { label: 'Theme', value: set.theme },
                 { label: 'Year', value: set.year },
                 { label: 'Piece Count', value: set.piece_count ? parseInt(set.piece_count).toLocaleString() : '' },
                 { label: 'Number of Bags', value: set.bag_count }
             ];
-
+            
             fields.forEach(field => {
                 if (field.value) {
-                    const card = document.createElement('div');
-                    card.className = 'detail-card';
-                    card.innerHTML = `
-                        <div class="detail-label">${field.label}</div>
-                        <div class="detail-value">${field.value}</div>
+                    cardHTML += `
+                        <div class="detail-card">
+                            <div class="detail-label">${field.label}</div>
+                            <div class="detail-value">${field.value}</div>
+                        </div>
                     `;
-                    details.appendChild(card);
                 }
             });
-
-            document.getElementById('resultCard').classList.remove('hidden');
             
-            // Clear input after showing result
-            setTimeout(() => {
-                document.getElementById('searchInput').value = '';
-                document.getElementById('searchInput').focus();
-            }, 100);
+            cardHTML += `</div>`;
+            card.innerHTML = cardHTML;
+            
+            return card;
         }
     </script>
 </body>
