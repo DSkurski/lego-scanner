@@ -96,6 +96,26 @@
             box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
         }
 
+        .view-all-btn {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(81, 207, 102, 0.3);
+            min-width: 200px;
+        }
+
+        .view-all-btn:hover {
+            background: linear-gradient(135deg, #37b24d 0%, #2b8a3e 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(81, 207, 102, 0.4);
+        }
+
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -287,6 +307,119 @@
             color: #666;
         }
 
+        /* Table View Styles */
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+            animation: slideUp 0.4s ease-out;
+            overflow-x: auto;
+        }
+
+        .table-container.hidden {
+            display: none;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .table-header h2 {
+            color: #0066cc;
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .close-table-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-table-btn:hover {
+            background: #ee5a6f;
+            transform: translateY(-2px);
+        }
+
+        .lego-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .lego-table thead {
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            color: white;
+        }
+
+        .lego-table th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lego-table td {
+            padding: 18px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #333;
+        }
+
+        .lego-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .lego-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .lego-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-set-number {
+            font-weight: 700;
+            color: #0066cc;
+        }
+
+        .table-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .table-link:hover {
+            color: #0052a3;
+            text-decoration: underline;
+        }
+
+        .table-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            background: #f0f0f0;
+            color: #666;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2em;
@@ -306,6 +439,19 @@
             
             .search-input-wrapper {
                 min-width: 100%;
+            }
+
+            .table-container {
+                padding: 20px;
+            }
+
+            .lego-table {
+                font-size: 0.9em;
+            }
+
+            .lego-table th,
+            .lego-table td {
+                padding: 12px 8px;
             }
         }
     </style>
@@ -331,6 +477,7 @@
                     <option value="theme">Theme</option>
                     <option value="set_name">Set Name</option>
                 </select>
+                <button id="viewAllBtn" class="view-all-btn">📋 View All Sets</button>
             </div>
 
             <div id="statusMessage" class="status ready">
@@ -351,6 +498,29 @@
                     <div class="stat-label">Total Bags</div>
                 </div>
             </div>
+        </div>
+
+        <div id="tableContainer" class="table-container hidden">
+            <div class="table-header">
+                <h2>All LEGO Sets</h2>
+                <button id="closeTableBtn" class="close-table-btn">✕ Close</button>
+            </div>
+            <table class="lego-table">
+                <thead>
+                    <tr>
+                        <th>Set #</th>
+                        <th>Name</th>
+                        <th>Theme</th>
+                        <th>Year</th>
+                        <th>Pieces</th>
+                        <th>Bags</th>
+                        <th>Status</th>
+                        <th>Instructions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
         </div>
 
         <div id="resultsContainer" class="results-container hidden">
@@ -440,6 +610,55 @@
             document.getElementById('searchInput').focus();
         };
 
+        // View All Sets Button
+        document.getElementById('viewAllBtn').addEventListener('click', function() {
+            displayTable();
+        });
+
+        // Close Table Button
+        document.getElementById('closeTableBtn').addEventListener('click', function() {
+            document.getElementById('tableContainer').classList.add('hidden');
+        });
+
+        // Display table with all sets
+        function displayTable() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            // Hide search results and errors
+            document.getElementById('resultsContainer').classList.add('hidden');
+            document.getElementById('errorMessage').classList.add('hidden');
+
+            // Sort sets by set number
+            const sortedSets = [...legoSets].sort((a, b) => {
+                return a.set_number.localeCompare(b.set_number);
+            });
+
+            // Populate table
+            sortedSets.forEach(set => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td class="table-set-number">${set.set_number}</td>
+                    <td>${set.set_name || '-'}</td>
+                    <td>${set.theme || '-'}</td>
+                    <td>${set.year || '-'}</td>
+                    <td>${set.piece_count ? parseInt(set.piece_count).toLocaleString() : '-'}</td>
+                    <td>${set.bag_count || '-'}</td>
+                    <td><span class="table-status">${set.current_status || '-'}</span></td>
+                    <td>${set.instructions_url ? `<a href="${set.instructions_url}" class="table-link" target="_blank">View</a>` : '-'}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+
+            // Show table
+            document.getElementById('tableContainer').classList.remove('hidden');
+            
+            // Scroll to table
+            document.getElementById('tableContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         // Handle search input
         const input = document.getElementById('searchInput');
         const searchType = document.getElementById('searchType');
@@ -471,6 +690,7 @@
             
             document.getElementById('resultsContainer').classList.add('hidden');
             document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('tableContainer').classList.add('hidden');
 
             // Find matching sets based on search type
             let matchingSets = [];
@@ -552,7 +772,17 @@
             cardHTML += `</div>`;
             
             if (set.image_url) {
-                cardHTML += `<img src="${set.image_url}" class="set-image" alt="${set.set_name}" onerror="this.style.display='none'">`;
+                cardHTML += `
+                    <div style="text-align: center; margin: 30px 0;">
+                        <img src="${set.image_url}" class="set-image" alt="${set.set_name || 'LEGO Set'}" 
+                             crossorigin="anonymous"
+                             onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';"
+                             onload="this.nextElementSibling.style.display='none';">
+                        <div style="display: none; padding: 60px; background: #f0f0f0; border-radius: 15px; color: #666; font-weight: 600;">
+                            📦 Image not available
+                        </div>
+                    </div>
+                `;
             }
             
             cardHTML += `<div class="set-details">`;
