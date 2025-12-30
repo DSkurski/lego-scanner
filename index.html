@@ -366,14 +366,16 @@
         // Edit this section to add your sets!
         const legoSets = [
             {
-                set_number: "75192",
-                set_name: "Millennium Falcon",
-                theme: "Star Wars",
-                year: "2017",
-                piece_count: "7541",
-                bag_count: "4",
-                image_url: "https://images.brickset.com/sets/large/75192-1.jpg",
-                instructions_url: "https://www.lego.com/en-us/service/buildinginstructions/75192"
+                set_number: "21047",
+                set_name: "Las Vegas",
+                theme: "Architecture",
+                year: "2018",
+                piece_count: "501",
+                bag_count: "1",
+                reference_number: "21047",
+                current_status: "Deconstructed",
+                image_url: "https://www.lego.com/cdn/cs/set/assets/bltd8f2c5c524abdafa/21047.jpg?format=webply&fit=bounds&quality=75&width=640&height=640&dpr=1",
+                instructions_url:"https://www.lego.com/en-us/service/building-instructions/21047" 
             },
             {
                 set_number: "10497",
@@ -382,6 +384,8 @@
                 year: "2022",
                 piece_count: "1254",
                 bag_count: "2",
+                reference_number: "REF-002",
+                current_status: "Displayed",
                 image_url: "https://images.brickset.com/sets/large/10497-1.jpg",
                 instructions_url: "https://www.lego.com/en-us/service/buildinginstructions/10497"
             },
@@ -392,6 +396,8 @@
                 year: "2024",
                 piece_count: "3745",
                 bag_count: "3",
+                reference_number: "REF-003",
+                current_status: "In Progress",
                 image_url: "https://images.brickset.com/sets/large/21348-1.jpg",
                 instructions_url: "https://www.lego.com/en-us/service/buildinginstructions/21348"
             }
@@ -543,7 +549,9 @@
                 { label: 'Theme', value: set.theme },
                 { label: 'Year', value: set.year },
                 { label: 'Piece Count', value: set.piece_count ? parseInt(set.piece_count).toLocaleString() : '' },
-                { label: 'Number of Bags', value: set.bag_count }
+                { label: 'Number of Bags', value: set.bag_count },
+                { label: 'Reference Number', value: set.reference_number },
+                { label: 'Current Status', value: set.current_status }
             ];
             
             fields.forEach(field => {
