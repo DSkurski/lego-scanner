@@ -328,12 +328,71 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         .table-header h2 {
             color: #0066cc;
             font-size: 2em;
             font-weight: 700;
+        }
+
+        .table-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #0066cc;
+            font-size: 0.9em;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .filter-select:hover {
+            border-color: #0066cc;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .clear-filters-btn {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-filters-btn:hover {
+            background: #555;
         }
 
         .close-table-btn {
@@ -373,6 +432,29 @@
             font-size: 0.9em;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        .lego-table th:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .lego-table th.sortable::after {
+            content: ' ⇅';
+            opacity: 0.5;
+            font-size: 0.9em;
+        }
+
+        .lego-table th.sorted-asc::after {
+            content: ' ▲';
+            opacity: 1;
+        }
+
+        .lego-table th.sorted-desc::after {
+            content: ' ▼';
+            opacity: 1;
         }
 
         .lego-table td {
@@ -505,16 +587,35 @@
                 <h2>All LEGO Sets</h2>
                 <button id="closeTableBtn" class="close-table-btn">✕ Close</button>
             </div>
+            
+            <div class="table-controls">
+                <div class="filter-group">
+                    <span class="filter-label">Filter by Theme:</span>
+                    <select id="themeFilter" class="filter-select">
+                        <option value="">All Themes</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <span class="filter-label">Filter by Status:</span>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Statuses</option>
+                    </select>
+                </div>
+                
+                <button id="clearFiltersBtn" class="clear-filters-btn">Clear Filters</button>
+            </div>
+            
             <table class="lego-table">
                 <thead>
                     <tr>
-                        <th>Set #</th>
-                        <th>Name</th>
-                        <th>Theme</th>
-                        <th>Year</th>
-                        <th>Pieces</th>
-                        <th>Bags</th>
-                        <th>Status</th>
+                        <th class="sortable" data-sort="set_number">Set #</th>
+                        <th class="sortable" data-sort="set_name">Name</th>
+                        <th class="sortable" data-sort="theme">Theme</th>
+                        <th class="sortable" data-sort="year">Year</th>
+                        <th class="sortable" data-sort="piece_count">Pieces</th>
+                        <th class="sortable" data-sort="bag_count">Bags</th>
+                        <th data-sort="current_status">Status</th>
                         <th>Instructions</th>
                     </tr>
                 </thead>
@@ -582,18 +683,105 @@
                 current_status: "Deconstructed",
                 image_url: "https://www.lego.com/cdn/cs/set/assets/blteec81dc55bc09803/42056.jpg?format=webply&fit=bounds&quality=75&width=640&height=640&dpr=1",
                 instructions_url: "https://www.lego.com/en-us/service/building-instructions/42056"
+            },
+            {
+                set_number: "3177",
+                set_name: "LEGO City Small Car",
+                theme: "LEGO City",
+                year: "2010",
+                piece_count: "43",
+                bag_count: "1",
+                reference_number: "REF-REF-01",
+                current_status: "Deconstructed",
+                image_url: "https://www.lego.com/cdn/product-assets/product.img.pri/3177_prod.jpg?format=webply&fit=bounds&quality=60&width=500&height=500&dpr=2",
+                instructions_url: "https://www.lego.com/en-us/service/building-instructions/3177"
+            },
+            {
+                set_number: "7639",
+                set_name: "LEGO City Camper",
+                theme: "LEGO City",
+                year: "2009",
+                piece_count: "165",
+                bag_count: "1",
+                reference_number: "REF-REF-01",
+                current_status: "Deconstructed",
+                image_url: "https://www.lego.com/cdn/product-assets/product.img.pri/7639_prod.jpg?format=webply&fit=bounds&quality=60&width=500&height=500&dpr=2",
+                instructions_url: "https://www.lego.com/en-us/service/building-instructions/7639"
+            },
+            {
+                set_number: "4435",
+                set_name: "Care and Caravan",
+                theme: "LEGO City",
+                year: "2011",
+                piece_count: "218",
+                bag_count: "1",
+                reference_number: "REF-REF-01",
+                current_status: "Deconstructed",
+                image_url: "https://www.lego.com/cdn/product-assets/product.img.pri/4435_prod.jpg?format=webply&fit=bounds&quality=60&width=500&height=500&dpr=2",
+                instructions_url: "https://www.lego.com/en-us/service/building-instructions/4435"
+            },
+            {
+                set_number: "6427895",
+                set_name: "Pirate Adventure Ride",
+                theme: "Promotion",
+                year: "2022",
+                piece_count: "",
+                bag_count: "1",
+                reference_number: "REF-6427895",
+                current_status: "Deconstructed",
+                image_url: "https://images.brickset.com/sets/large/6427895-1.jpg?202210020414",
+                instructions_url: "N/A"
+            },
+            {
+                set_number: "5770",
+                set_name: "Lighthouse Island",
+                theme: "Creator",
+                year: "2011",
+                piece_count: "518",
+                bag_count: "1",
+                reference_number: "REF-5770",
+                current_status: "Deconstructed",
+                image_url: "https://www.lego.com/cdn/product-assets/product.img.pri/5770_prod.jpg?format=webply&fit=bounds&quality=60&width=500&height=500&dpr=2",
+                instructions_url: "https://www.lego.com/en-us/service/building-instructions/5770"
+            },
+            {
+                set_number: "5766",
+                set_name: "LEGO Creator Log Cabin",
+                theme: "Creator",
+                year: "2010",
+                piece_count: "355",
+                bag_count: "1",
+                reference_number: "REF-5766",
+                current_status: "Deconstructed",
+                image_url: "https://www.lego.com/cdn/product-assets/product.img.pri/5766-0000-xx-14-1.jpg?format=webply&fit=bounds&quality=60&width=500&height=500&dpr=2",
+                instructions_url: "https://www.lego.com/en-us/service/building-instructions/5766"
+            },
+            {
+                set_number: "4996",
+                set_name: "LEGO Creator Beach House",
+                theme: "Creator",
+                year: "2008",
+                piece_count: "522",
+                bag_count: "1",
+                reference_number: "REF-4996",
+                current_status: "Deconstructed",
+                image_url: "https://www.lego.com/cdn/product-assets/product.img.pri/4996_prod.jpg?format=webply&fit=bounds&quality=60&width=500&height=500&dpr=2",
+                instructions_url: "https://www.lego.com/en-us/service/building-instructions/4996"
             }
             // Add more sets here in the same format
         ];
 
         // Calculate statistics
-        function updateStats() {
-            const totalSets = legoSets.length;
-            const totalPieces = legoSets.reduce((sum, set) => {
+        function updateStats(sets = null) {
+            // If no specific sets provided, use all sets
+            const setsToCount = sets || legoSets;
+            
+            const totalSets = setsToCount.length;
+            const totalPieces = setsToCount.reduce((sum, set) => {
                 const pieces = parseInt(set.piece_count) || 0;
                 return sum + pieces;
             }, 0);
-            const totalBags = legoSets.reduce((sum, set) => {
+            const totalBags = setsToCount.reduce((sum, set) => {
                 const bags = parseInt(set.bag_count) || 0;
                 return sum + bags;
             }, 0);
@@ -618,7 +806,13 @@
         // Close Table Button
         document.getElementById('closeTableBtn').addEventListener('click', function() {
             document.getElementById('tableContainer').classList.add('hidden');
+            // Reset stats to show all sets when closing table
+            updateStats();
         });
+
+        // Table sorting and filtering
+        let currentSort = { column: 'set_number', direction: 'asc' };
+        let currentFilters = { theme: '', status: '' };
 
         // Display table with all sets
         function displayTable() {
@@ -629,13 +823,89 @@
             document.getElementById('resultsContainer').classList.add('hidden');
             document.getElementById('errorMessage').classList.add('hidden');
 
-            // Sort sets by set number
-            const sortedSets = [...legoSets].sort((a, b) => {
-                return a.set_number.localeCompare(b.set_number);
+            // Populate filter dropdowns
+            populateFilters();
+
+            // Reset filters
+            currentFilters = { theme: '', status: '' };
+            document.getElementById('themeFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+
+            // Reset sort
+            currentSort = { column: 'set_number', direction: 'asc' };
+            updateSortIndicators();
+
+            // Render table
+            renderTable();
+
+            // Show table
+            document.getElementById('tableContainer').classList.remove('hidden');
+            
+            // Scroll to table
+            document.getElementById('tableContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Populate filter dropdowns
+        function populateFilters() {
+            // Get unique themes
+            const themes = [...new Set(legoSets.map(set => set.theme).filter(Boolean))].sort();
+            const themeFilter = document.getElementById('themeFilter');
+            themeFilter.innerHTML = '<option value="">All Themes</option>';
+            themes.forEach(theme => {
+                const option = document.createElement('option');
+                option.value = theme;
+                option.textContent = theme;
+                themeFilter.appendChild(option);
+            });
+
+            // Get unique statuses
+            const statuses = [...new Set(legoSets.map(set => set.current_status).filter(Boolean))].sort();
+            const statusFilter = document.getElementById('statusFilter');
+            statusFilter.innerHTML = '<option value="">All Statuses</option>';
+            statuses.forEach(status => {
+                const option = document.createElement('option');
+                option.value = status;
+                option.textContent = status;
+                statusFilter.appendChild(option);
+            });
+        }
+
+        // Render table with current sort and filters
+        function renderTable() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            // Filter sets
+            let filteredSets = legoSets.filter(set => {
+                const themeMatch = !currentFilters.theme || set.theme === currentFilters.theme;
+                const statusMatch = !currentFilters.status || set.current_status === currentFilters.status;
+                return themeMatch && statusMatch;
+            });
+
+            // Update stats with filtered sets
+            updateStats(filteredSets);
+
+            // Sort sets
+            filteredSets.sort((a, b) => {
+                let aVal = a[currentSort.column] || '';
+                let bVal = b[currentSort.column] || '';
+
+                // Handle numeric columns
+                if (currentSort.column === 'piece_count' || currentSort.column === 'bag_count' || currentSort.column === 'year') {
+                    aVal = parseInt(aVal) || 0;
+                    bVal = parseInt(bVal) || 0;
+                } else {
+                    aVal = aVal.toString().toLowerCase();
+                    bVal = bVal.toString().toLowerCase();
+                }
+
+                if (aVal < bVal) return currentSort.direction === 'asc' ? -1 : 1;
+                if (aVal > bVal) return currentSort.direction === 'asc' ? 1 : -1;
+                return 0;
             });
 
             // Populate table
-            sortedSets.forEach(set => {
+            filteredSets.forEach(set => {
                 const row = document.createElement('tr');
                 
                 row.innerHTML = `
@@ -652,12 +922,59 @@
                 tableBody.appendChild(row);
             });
 
-            // Show table
-            document.getElementById('tableContainer').classList.remove('hidden');
-            
-            // Scroll to table
-            document.getElementById('tableContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Show message if no results
+            if (filteredSets.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="8" style="text-align: center; padding: 40px; color: #666;">No sets match the current filters</td>';
+                tableBody.appendChild(row);
+            }
         }
+
+        // Update sort indicators
+        function updateSortIndicators() {
+            document.querySelectorAll('.lego-table th').forEach(th => {
+                th.classList.remove('sorted-asc', 'sorted-desc');
+                if (th.dataset.sort === currentSort.column) {
+                    th.classList.add(currentSort.direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+                }
+            });
+        }
+
+        // Table header click event for sorting
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'TH' && e.target.classList.contains('sortable')) {
+                const column = e.target.dataset.sort;
+                
+                if (currentSort.column === column) {
+                    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSort.column = column;
+                    currentSort.direction = 'asc';
+                }
+                
+                updateSortIndicators();
+                renderTable();
+            }
+        });
+
+        // Filter change events
+        document.getElementById('themeFilter').addEventListener('change', function() {
+            currentFilters.theme = this.value;
+            renderTable();
+        });
+
+        document.getElementById('statusFilter').addEventListener('change', function() {
+            currentFilters.status = this.value;
+            renderTable();
+        });
+
+        // Clear filters button
+        document.getElementById('clearFiltersBtn').addEventListener('click', function() {
+            currentFilters = { theme: '', status: '' };
+            document.getElementById('themeFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            renderTable();
+        });
 
         // Handle search input
         const input = document.getElementById('searchInput');
@@ -711,11 +1028,15 @@
 
             if (matchingSets.length > 0) {
                 displayResults(matchingSets, searchValue, type);
+                // Update stats with search results
+                updateStats(matchingSets);
                 statusMsg.innerHTML = `<span style="font-size: 1.2em;">✓</span> Found ${matchingSets.length} result${matchingSets.length > 1 ? 's' : ''}`;
                 statusMsg.className = 'status ready';
             } else {
                 document.getElementById('errorMessage').textContent = `No sets found matching "${searchValue}" in ${type.replace('_', ' ')}`;
                 document.getElementById('errorMessage').classList.remove('hidden');
+                // Reset stats to show all sets
+                updateStats();
                 statusMsg.textContent = `${legoSets.length} sets in collection`;
                 statusMsg.className = 'status ready';
             }
@@ -770,20 +1091,6 @@
             }
             
             cardHTML += `</div>`;
-            
-            if (set.image_url) {
-                cardHTML += `
-                    <div style="text-align: center; margin: 30px 0;">
-                        <img src="${set.image_url}" class="set-image" alt="${set.set_name || 'LEGO Set'}" 
-                             crossorigin="anonymous"
-                             onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';"
-                             onload="this.nextElementSibling.style.display='none';">
-                        <div style="display: none; padding: 60px; background: #f0f0f0; border-radius: 15px; color: #666; font-weight: 600;">
-                            📦 Image not available
-                        </div>
-                    </div>
-                `;
-            }
             
             cardHTML += `<div class="set-details">`;
             
